@@ -1,0 +1,45 @@
+services:
+  email_mfa:
+    build:
+      context: ./services/email_mfa
+      dockerfile: Dockerfile
+    container_name: email_mfa
+    ports:
+      - "10121:10121"
+    volumes:
+      - ./services/email_mfa:/app
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 10121
+    env_file:
+      - .env
+    environment:
+      - ASSISTVET_MFA_PASSWORD
+      - ASSISTVET_MFA_USERNAME
+  provet:
+    build:
+      context: services/provet
+      dockerfile: Dockerfile
+    container_name: provet
+    ports:
+      - "10122:10122"
+    volumes:
+      - ./services/provet:/app
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 10122 --workers 1
+    env_file:
+      - .env
+    environment:
+      - ASSISTVET_PROVET_MFA_SERVICE_URL=http://email_mfa:10121
+      - ASSISTVET_PROVET_USERNAME
+      - ASSISTVET_PROVET_PASSWORD
+      - ASSISTVET_PROVET_BROWSER_TIMEOUT_MS
+#  postgres:
+#    image: postgres:14-alpine
+#    container_name: postgres_ad
+#    ports:
+#      - 5432:5432
+#    volumes:
+#      - pg_data:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_PASSWORD=localenv
+#      - POSTGRES_USER=localenv
+#volumes:
+#  pg_data:
