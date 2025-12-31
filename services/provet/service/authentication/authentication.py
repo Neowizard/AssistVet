@@ -19,11 +19,11 @@ class Authentication:
         self._mfa = authentication.mfa.Mfa()
 
     def login(self) -> Optional[list[dict]]:
-        url = f'{self._config.provet_url}/{self._config.account_id}/auth/login/'
-        logger.info(f"Logging in to {url}")
+        url = f'https://{self._config.provet_url}/{self._config.account_id}/auth/login/'
+        logger.info(f"Logging into {url}")
         self._browser.goto(url)
-        self._browser.enter_input("id_username", self._config.username)
-        self._browser.enter_input("id_password", self._config.password)
+        self._browser.enter_input("id_username", self._config.provet_username)
+        self._browser.enter_input("id_password", self._config.provet_password)
         login_time = datetime.datetime.now()
         self._browser.click_button("id_btn_login", expect_redirect=True)
         url = self._browser.get_page_url()

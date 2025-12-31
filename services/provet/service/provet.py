@@ -31,15 +31,22 @@ class Provet:
 
         start = from_date.isoformat(timespec='milliseconds') + 'Z'
         end = to_date.isoformat(timespec='milliseconds') + 'Z'
-        url = f'{self._config.provet_url}/{self._config.account_id}/{endpoints.APPOINTMENT_ENDPOINT}'
+        url = f'https://{self._config.provet_url}/{self._config.account_id}/{endpoints.APPOINTMENT_ENDPOINT}'
 
         params = self._build_appointments_params(start, end)
         headers = self._build_appointments_headers(session_cookies)
 
-        with httpx.Client(timeout=10) as client:
-            response = client.get(url, params=params, headers=headers)
-            response.raise_for_status()
-            response_json = response.json()
+        try:
+            with httpx.Client(timeout=10) as client:
+                response = client.get(url, params=params, headers=headers)
+                response.raise_for_status()
+                response_json = response.json()
+        except Exception as e:
+            logger.warning(f"Failed to get appointments information: {e}. Retrying...")
+            with httpx.Client(timeout=10) as client:
+                response = client.get(url, params=params, headers=headers)
+                response.raise_for_status()
+                response_json = response.json()
 
         appointments = self.create_appointments(response_json)
         return appointments
@@ -60,7 +67,7 @@ class Provet:
         return [start_param, end_param, department_param] + resources_params
 
     def _build_appointments_headers(self, session_cookies) -> dict:
-        cookies = [f'{cookie["name"]}={cookie["value"]}' for cookie in session_cookies]
+        cookies = [f'{cookie.name}={cookie.value}' for cookie in session_cookies]
         cookies_header = '; '.join(cookies)
         headers = {'Cookie': cookies_header}
         return headers

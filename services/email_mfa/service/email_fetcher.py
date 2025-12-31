@@ -18,7 +18,7 @@ class EmailFetcher:
     def _connect(self) -> imaplib.IMAP4_SSL:
         logger.debug(f"Connecting to {self._config.imap_url}")
         mail = imaplib.IMAP4_SSL(self._config.imap_url)
-        mail.login(self._config.username, self._config.password)
+        mail.login(self._config.email_username, self._config.email_password)
         mail.select("INBOX")
         return mail
 

@@ -12,11 +12,15 @@ class ProvetConfig:
     provet_url: str
     account_id: int
     department_id: int
-    username: str
-    password: str
+    provet_username: str
+    provet_password: str
     mfa_service_url: str
     mfa_timeout_sec: int
     browser_timeout_ms: int
+    db_host: str
+    db_port: str
+    db_username: str
+    db_password: str
 
     _Config = None
 
@@ -31,7 +35,7 @@ class ProvetConfig:
         for key in config_dict.keys():
             override = os.getenv(f"ASSISTVET_PROVET_{key.upper()}", None)
             if override:
-                logger.info(f"Overriding config {key} with env var ASSISTVET_MFA_{key.upper()}")
+                logger.info(f"Overriding config {key} with env var ASSISTVET_PROVET_{key.upper()}")
                 config_dict[key] = override
 
     @classmethod

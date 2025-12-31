@@ -11,8 +11,7 @@ from appointment import Appointment
 from browser.browser import Browser
 from provet import Provet
 from provet_config import ProvetConfig
-
-import authentication.authentication
+from db import db
 
 router = APIRouter()
 
@@ -48,7 +47,7 @@ def get_appointments(request: AppointmentsRequest) -> AppointmentsResponse:
     try:
         logger.info(f"Received request to get appointments for {request.from_date} to {request.to_date}")
         config = ProvetConfig.load('./config.yaml')
-
+        db.CookiesTable.connect(config)
         with Browser(config.browser_timeout_ms) as browser:
             provet = Provet(browser)
             appointments = provet.appointments(request.from_date, request.to_date)

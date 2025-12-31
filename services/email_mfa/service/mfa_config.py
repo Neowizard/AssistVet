@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 @dataclass(frozen=True, slots=True)
 class MfaConfig:
     imap_url: str
-    username: str
-    password: str
+    email_username: str
+    email_password: str
 
     provet_account_id: str
 

@@ -1,10 +1,15 @@
-provet_url: https://provetcloud.com
+provet_url: provetcloud.com
 account_id: null
 department_id: null
-username: null
-password: null
+provet_username: null
+provet_password: null
 
 mfa_service_url: null
 mfa_timeout_sec: 300
 
 browser_timeout_ms: 15000
+
+db_username: null
+db_password: null
+db_host: null
+db_port: null
