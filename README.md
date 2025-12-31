@@ -18,20 +18,33 @@ The project consists of multiple microservices:
 - **Docker** and **Docker Compose**
 - **Python 3.12+**
 - **pyenv** (recommended for Python version management)
+- **make** (recommended for easy command execution)
 - Valid Provet account credentials
 - Email account credentials for MFA
 
 ## Running
 
-To run the system, set up the following environment variables, before invoking `docker compose up`
+To run the system, update the config.yaml files or set the appropriate environment variables to override the config. 
+The override format is:
+```
+ASSISTVET_<SERVICE>_<UPCASE_CONFIG_NAME>=<value>
+```
+For example, to override the `provet_username` config for the `provet` service, set the environment variable:
 
 ```
-
-ASSISTVET_PROVET_ACCOUNT_ID - Account ID for the Provet account
-ASSISTVET_PROVET_USERNAME - Username for the Provet system 
-ASSISTVET_PROVET_PASSWORD - User password for the Provet system
-ASSISTVET_MFA_PROVET_ACCOUNT_ID - Account ID for the Provet account
-ASSISTVET_MFA_USERNAME - User for email service that receives Provet MFA codes
-ASSISTVET_MFA_PASSWORD - Email service password
-ASSISTVET_MFA_IMAP_URL - URL of the email service
+ASSISTVET_PROVET_PROVET_USERNAME=my_username
 ```
+To set the `imap_url` config for the `email_mfa` service, set the environment variable:
+
+```
+ASSISTVET_EMAIL_MFA_IMAP_URL=imap.example.com
+```
+
+### Run with Make
+After setting the necessary configurations, you can start the services with `make up` (or `make debug` to troubleshoot). 
+Take the service down with `make down`
+
+
+## First Setup
+To set up the project, you first need to start the services with `make up`, and then run the DB setup Make task with `make migrate` 
+

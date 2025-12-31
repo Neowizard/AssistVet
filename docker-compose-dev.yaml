@@ -14,6 +14,8 @@ services:
     environment:
       - ASSISTVET_MFA_EMAIL_PASSWORD
       - ASSISTVET_MFA_EMAIL_USERNAME
+    tty: true
+    stdin_open: true
   provet:
     build:
       context: services/provet
@@ -30,6 +32,8 @@ services:
       - ASSISTVET_PROVET_MFA_SERVICE_URL=http://email_mfa:10121
       - ASSISTVET_PROVET_PROVET_USERNAME
       - ASSISTVET_PROVET_PROVET_PASSWORD
+    tty: true
+    stdin_open: true
   postgres:
     image: postgres:14-alpine
     container_name: assistvet_postgres
@@ -40,5 +44,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=localenv
       - POSTGRES_USER=localenv
+    tty: true
+    stdin_open: true
 volumes:
   postgres_storage:

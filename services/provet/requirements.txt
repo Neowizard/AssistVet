@@ -1,8 +1,13 @@
 httpx==0.28.1
-playwright==1.47.0
 pyyaml==6.0.3
+sqlalchemy==2.0.45
 fastapi==0.125.0
 pygments==2.19.2
 pydantic==2.12.5
 uvicorn==0.38.0
 setuptools==44.1.1
+psycopg2-binary==2.9.11
+alembic==1.17.2
+sqlalchemy_utils==0.42.1
+playwright==1.47.0
+sqlalchemy_utils==0.42.1
