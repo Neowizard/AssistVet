@@ -1,9 +1,0 @@
-pyyaml==6.0.3
-fastapi==0.125.0
-pydantic==2.12.5
-uvicorn==0.38.0
-setuptools==44.1.1
-pygments==2.19.2
-agno==2.3.25
-psycopg2-binary==2.9.11
-sqlalchemy_utils==0.42.1
