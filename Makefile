@@ -1,7 +1,7 @@
 .PHONY: debug start debug logs stop
 
 up:
-	docker compose up -d --build
+	docker compose up -d
 
 debug:
 	docker compose -f docker-compose-dev.yaml up --build

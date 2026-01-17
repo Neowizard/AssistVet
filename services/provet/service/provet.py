@@ -1,16 +1,13 @@
-import traceback
 from datetime import datetime
 import logging
 
 import httpx
-from pydantic import ValidationError
 
 import endpoints
 import provet_config
-from appointment import Appointment
-from browser.browser import Browser
+from schema import Appointment
 
-from authentication import authentication
+from authentication.authentication import Authentication
 
 logger = logging.getLogger(__name__)
 
@@ -18,13 +15,12 @@ logger = logging.getLogger(__name__)
 class Provet:
     ROOMS_RESOURCE_IDS = ("19", "20", "21", "22", "43")
 
-    def __init__(self, browser: Browser):
+    def __init__(self, authentication: Authentication):
+        self._authentication = authentication
         self._config = provet_config.ProvetConfig.get_config()
-        self._browser = browser
-        self._authentication = authentication.Authentication(self._browser)
 
-    def appointments(self, from_date: datetime, to_date: datetime) -> list[Appointment]:
-        session_cookies = self._authentication.get_session()
+    async def appointments(self, from_date: datetime, to_date: datetime) -> list[Appointment]:
+        session_cookies = await self._authentication.get_session()
         if not session_cookies:
             logger.error("Failed to login to Provet system.")
             raise Exception("Failed to login to Provet system.")
@@ -47,15 +43,18 @@ class Provet:
                 response = client.get(url, params=params, headers=headers)
                 response.raise_for_status()
                 response_json = response.json()
-
-        appointments = self.create_appointments(response_json)
+        logger.info(f"First appointment: {response_json[0]}")
+        appointments = self.parse_appointments(response_json)
         return appointments
 
-    def create_appointments(self, response_json) -> list[Appointment]:
+    def parse_appointments(self, response_json) -> list[Appointment]:
         for appointment_json in response_json:
             appointment_json['rooms'] = [resource['name'] for resource in appointment_json['resources']]
 
-        appointments = [Appointment(**a_json) for a_json in response_json]
+        client_appointments = list(filter(lambda appointment: appointment.get('client') is not None,
+                                          response_json))
+
+        appointments = [Appointment(**a_json) for a_json in client_appointments]
         logger.info(f"Successfully parsed {len(appointments)} appointments")
         return appointments
 

@@ -14,15 +14,15 @@ class Mfa:
     def __init__(self):
         self._config = provet_config.ProvetConfig.get_config()
 
-    def resolve_mfa(self, browser: Browser, mfa_init_time: datetime.datetime):
+    async def resolve_mfa(self, browser: Browser, mfa_init_time: datetime.datetime):
         self._verify_mfa_page(browser)
 
         mfa_codes = self._get_mfa_code(mfa_init_time)
         logger.info(f"Got {len(mfa_codes)} codes. Entering into MFA prompt")
         if len(mfa_codes) == 0:
             raise Exception("No MFA codes found.")
-        browser.enter_input("id_twofactor_given_code", mfa_codes[0])
-        browser.click_button("id_btn_login", expect_redirect=True)
+        await browser.enter_input("id_twofactor_given_code", mfa_codes[0])
+        await browser.click_button("id_btn_login", expect_redirect=True)
 
     def _get_mfa_code(self, mfa_init_time: datetime.datetime) -> list[str]:
         url = f'{self._config.mfa_service_url}/assistvet/mfa/get_code'
