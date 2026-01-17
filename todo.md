@@ -1,5 +1,0 @@
-- Improve response structure for appointments tool
-- Add shifts tool
-- Add AI agent
-- Add chat interface
-- Add knowledge base tool
