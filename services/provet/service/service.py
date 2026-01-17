@@ -28,8 +28,8 @@ logger = getLogger(__name__)
 
 
 class AppointmentsRequest(BaseModel):
-    from_date: datetime.datetime
-    to_date: datetime.datetime
+    from_date: datetime
+    to_date: datetime
 
 
 Status = typing.Literal["OK", "ERROR"]
