@@ -1,8 +1,20 @@
 services:
+#  assistvet_ai:
+#    build:
+#      context: ./services/assistvet_ai
+#    container_name: assistvet_ai
+#    ports:
+#      - "10120:10120"
+#    volumes:
+#      - ./services/mcp_server:/app
+#    command: uvicorn main:app --reload --host 0.0.0.0 --port 10120
+#    env_file:
+#      - .env
+#    tty: true
+#    stdin_open: true
   email_mfa:
     build:
       context: ./services/email_mfa
-      dockerfile: Dockerfile
     container_name: email_mfa
     ports:
       - "10121:10121"
@@ -19,7 +31,6 @@ services:
   provet:
     build:
       context: services/provet
-      dockerfile: Dockerfile
     container_name: provet
     ports:
       - "10122:10122"
