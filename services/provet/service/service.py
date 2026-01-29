@@ -8,7 +8,7 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 from logging import getLogger
 
-from schema import Appointment
+from schema.appointment import Appointment
 from authentication.authentication import Authentication
 from browser.browser import Browser
 from provet import Provet

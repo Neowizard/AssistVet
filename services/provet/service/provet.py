@@ -5,7 +5,7 @@ import httpx
 
 import endpoints
 import provet_config
-from schema import Appointment
+from schema import appointment
 
 from authentication.authentication import Authentication
 
@@ -19,7 +19,7 @@ class Provet:
         self._authentication = authentication
         self._config = provet_config.ProvetConfig.get_config()
 
-    async def appointments(self, from_date: datetime, to_date: datetime) -> list[Appointment]:
+    async def appointments(self, from_date: datetime, to_date: datetime) -> list[appointment.Appointment]:
         session_cookies = await self._authentication.get_session()
         if not session_cookies:
             logger.error("Failed to login to Provet system.")
@@ -43,18 +43,12 @@ class Provet:
                 response = client.get(url, params=params, headers=headers)
                 response.raise_for_status()
                 response_json = response.json()
-        logger.info(f"First appointment: {response_json[0]}")
         appointments = self.parse_appointments(response_json)
         return appointments
 
-    def parse_appointments(self, response_json) -> list[Appointment]:
-        for appointment_json in response_json:
-            appointment_json['rooms'] = [resource['name'] for resource in appointment_json['resources']]
+    def parse_appointments(self, response: dict) -> list[appointment.Appointment]:
+        appointments = [appointment.parse_appointment(appointment_dict) for appointment_dict in response]
 
-        client_appointments = list(filter(lambda appointment: appointment.get('client') is not None,
-                                          response_json))
-
-        appointments = [Appointment(**a_json) for a_json in client_appointments]
         logger.info(f"Successfully parsed {len(appointments)} appointments")
         return appointments
 
